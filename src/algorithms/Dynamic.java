@@ -1,12 +1,12 @@
 package algorithms;
 
 /**
- * Class Dinamic
+ * Class Dynamic
  *
  * @author Michel Llorens <mllorens@dcc.uchile.cl>
  * @version 1.0, 04-07-2016
  */
-public class Dinamic implements Hamiltonian{
+public class Dynamic implements Hamiltonian{
     @Override
     public void calculate() {
 
