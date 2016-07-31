@@ -9,5 +9,5 @@ package algorithms;
 public interface Hamiltonian {
     void calculate();
     double getWeight();
-    double getDuration();
+    long getDuration();
 }
