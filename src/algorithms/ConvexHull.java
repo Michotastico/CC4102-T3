@@ -70,7 +70,7 @@ public class ConvexHull implements Hamiltonian {
 
     @Override
     public double getWeight() {
-        return 0;
+        return this.weight;
     }
 
     @Override

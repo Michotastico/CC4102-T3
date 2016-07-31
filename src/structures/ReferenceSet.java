@@ -25,4 +25,12 @@ public class ReferenceSet implements Comparable<ReferenceSet>{
     public double getValue(double[][]table){
         return table[x][y];
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
