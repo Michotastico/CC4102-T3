@@ -24,7 +24,7 @@ public class ConvexHull implements Hamiltonian {
 
     @Override
     public void calculate() {
-        long initTime = System.nanoTime();
+
         Point[] points = new Point[this.points.size()];
         points = this.points.toArray(points);
         Point[] hull = this.calculateHull(points);
@@ -33,7 +33,8 @@ public class ConvexHull implements Hamiltonian {
             this.points.remove(p);
         }
         ArrayList<Point> hamiltonian = new ArrayList<>(Arrays.asList(hull));
-
+        // Here we have the C and init the algorithm
+        long initTime = System.nanoTime();
         Point pp, ppp;
         double min_value = Double.MAX_VALUE;
         double actual_value;
@@ -56,6 +57,15 @@ public class ConvexHull implements Hamiltonian {
 
         long endTime = System.nanoTime();
         this.totalTime = endTime - initTime;
+
+        // Calculate the length of C
+        double length = 0;
+        int next;
+        for(int i = 0; i < hamiltonian.size(); i ++){
+            next = (i + 1)%hamiltonian.size();
+            length += hamiltonian.get(i).distance(hamiltonian.get(next));
+        }
+        this.weight = length;
     }
 
     @Override
