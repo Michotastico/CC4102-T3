@@ -18,7 +18,7 @@ public class ConvexHull implements Hamiltonian {
     private double weight;
 
     public ConvexHull(ArrayList<Point> points){
-        this.points = points;
+        this.points = new ArrayList<>(points);
         this.totalTime = 0;
     }
 
