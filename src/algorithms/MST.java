@@ -27,6 +27,11 @@ public class MST implements Hamiltonian {
     }
 
     @Override
+    public String getName() {
+        return "MST";
+    }
+
+    @Override
     public void calculate() {
         double[][] table = this.makeTable();
         PriorityQueue<ReferenceSet> queue = new PriorityQueue<>();

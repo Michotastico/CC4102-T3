@@ -7,6 +7,7 @@ package algorithms;
  * @version 1.0, 04-07-2016
  */
 public interface Hamiltonian {
+    String getName();
     void calculate();
     double getWeight();
     long getDuration();

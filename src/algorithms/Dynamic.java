@@ -21,6 +21,11 @@ public class Dynamic implements Hamiltonian{
     }
 
     @Override
+    public String getName() {
+        return "Dynamic";
+    }
+
+    @Override
     public void calculate() {
         long initTime = System.nanoTime();
 

@@ -23,6 +23,11 @@ public class ConvexHull implements Hamiltonian {
     }
 
     @Override
+    public String getName() {
+        return "ConvexHull";
+    }
+
+    @Override
     public void calculate() {
 
         Point[] points = new Point[this.points.size()];
