@@ -5,10 +5,10 @@ import algorithms.MST;
 import structures.Point;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Class Main
@@ -62,10 +62,56 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
+        singleTest();
+
+        countriesTest();
+
+
+    }
+
+    private static void singleTest() throws IOException{
+        CountrySet country = new CountrySet("Egypt", "eg7146.tsp", 0);
+        readPoints(country.getFile());
+        ArrayList<Point> randomCities = new ArrayList<>();
+        Random generator = new Random(42);
+        for(int i = 0; i < 15; i++){
+            randomCities.add(points.remove(generator.nextInt(points.size())));
+        }
+
+        int[] testSize = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+
+        ArrayList<Point> testSet = new ArrayList<>();
+        Hamiltonian[] algorithms = new Hamiltonian[3];
+        print("Test with arbitrary number of cities in "+country.getName());
+        for(Integer size: testSize){
+            print("Test with number of cities : " + size);
+            testSet.clear();
+            for(int i = 0; i < size; i++)
+                testSet.add(randomCities.get(i));
+
+            algorithms[0] = new Dynamic(testSet);
+            algorithms[1] = new ConvexHull(testSet);
+            algorithms[2] = new MST(testSet);
+
+            for(Hamiltonian h : algorithms){
+                print(h.getName());
+                h.calculate();
+                print("Duration");
+                print(h.getDuration());
+                print("Weight");
+                print(h.getWeight());
+                print("");
+            }
+        }
+
+
+    }
+
+    private static void countriesTest() throws IOException {
         //Fill with countries and his optimum.
         fillCountries();
 
-        // generatePoints();
+        //Run test
         Hamiltonian[] algorithms = new Hamiltonian[3];
         for(CountrySet country: countries){
             print(country.getName());
