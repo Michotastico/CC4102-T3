@@ -62,15 +62,15 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        points.add(new Point(0.0, 0.0));
+        /*points.add(new Point(0.0, 0.0));
         points.add(new Point(1.0, 0.0));
         points.add(new Point(1.0, 1.0));
         points.add(new Point(0.0, 1.0));
 
         Hamiltonian algorithm = new Dynamic(points);
-        algorithm.calculate();
-        //singleTest();
-        //countriesTest();
+        algorithm.calculate();*/
+        singleTest();
+        countriesTest();
     }
 
     private static void singleTest() throws IOException{
