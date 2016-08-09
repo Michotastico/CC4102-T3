@@ -16,10 +16,12 @@ public class Dynamic implements Hamiltonian{
 
     private ArrayList<Point> points;
     private long totalTime;
+    private double weight;
 
     public Dynamic(ArrayList<Point> points){
         this.points = points;
         this.totalTime = 0;
+        this.weight = 0;
     }
 
     @Override
@@ -36,10 +38,6 @@ public class Dynamic implements Hamiltonian{
         // First row
 
         double[] row = new double[rowSize];
-        for(int i = 0; i < rowSize; i++){
-            double distance = p1.distance(points.get(i + 1));
-            row[i] = distance;
-        }
 
         HashMap<String, double[]> table = new HashMap<>();
         table.put("0", row);
@@ -49,8 +47,10 @@ public class Dynamic implements Hamiltonian{
         ArrayList<String> keys;
         ArrayList<Integer> indexes;
         double[] tmpRow;
+        String key = "0";
+
         for(int i = 1; i < maxCols; i++){
-            String key = Integer.toString(i, 2);
+            key = Integer.toString(i, 2);
             String reverseKey = new StringBuilder(key).reverse().toString();
             int ones = key.replace("0", "").length();
             //Base case
@@ -59,34 +59,60 @@ public class Dynamic implements Hamiltonian{
                 point = points.get(index + 1);
                 double[] newRow = new double[rowSize];
                 for(int counter = 0; counter < index; counter ++)
-                    newRow[counter] = row[counter] + point.distance(points.get(counter + 1));
+                    newRow[counter] = 0;
                 for(int counter = index + 1 ; counter < rowSize; counter ++)
-                    newRow[counter] = row[counter] + point.distance(points.get(counter + 1));
-                newRow[index] = row[index];
+                    newRow[counter] = 0;
+                newRow[index] = p1.distance(point);
 
                 table.put(key, newRow);
             }
             else{
-                keys = getKeys(reverseKey);
                 indexes = getIndexes(reverseKey);
                 otherRows = new ArrayList<>();
+                tmpRow = new double[rowSize];
+                String tmpIndex = "";
+                for(int counter = 0; counter < reverseKey.length(); counter++){
+                    if(indexes.contains(counter)){
+                        String tmp = tmpIndex + "0" + reverseKey.substring(counter+1, reverseKey.length());
+                        tmp = removeHead(new StringBuilder(tmp).reverse().toString());
 
-                for(int index = 0; index < keys.size(); index++){
-                    String _key = keys.get(index);
-                    tmpRow = table.get(_key).clone();
-                    point = points.get(indexes.get(index) + 1);
-                    for(int inner = 0; inner < tmpRow.length; inner ++){
-                        if(indexes.contains(inner))
-                            continue;
-                        tmpRow[inner] = tmpRow[inner] + point.distance(points.get(inner + 1));
+                        double [] anotherTmp = table.get(tmp);
+                        double [] otherAnotherTmp = new double[rowSize];
+                        otherAnotherTmp[counter] = Double.MAX_VALUE;
+                        double val;
+                        for(int a = 0; a < counter; a++){
+                            val = anotherTmp[a] + points.get(counter + 1).distance(points.get(a + 1));
+                            otherAnotherTmp[a] = val;
+                        }
+                        for(int b = counter + 1; b < rowSize; b++){
+                            val = anotherTmp[b] + points.get(counter + 1).distance(points.get(b + 1));
+                            otherAnotherTmp[b] = val;
+                        }
+
+                        double min = Double.MAX_VALUE;
+                        for(Double d: otherAnotherTmp)
+                            if(d < min)
+                                min = d;
+                        tmpRow[counter] = min;
+                        tmpIndex += "1";
                     }
-                    otherRows.add(tmpRow);
+                    else{
+                        tmpIndex += "0";
+                        tmpRow[counter] = 0;
+                    }
                 }
-
-                double[] mins = getMin(otherRows);
-                table.put(key, mins);
+                table.put(key, tmpRow);
             }
         }
+        double [] finalRow = table.get(key);
+        for(int i = 0; i < finalRow.length; i++){
+            finalRow[i] = finalRow[i] + p1.distance(points.get(i + 1));
+        }
+        double min = Double.MAX_VALUE;
+        for(Double d: finalRow)
+            if(d < min)
+                min = d;
+        this.weight = min;
 
 
         long endTime = System.nanoTime();
@@ -116,24 +142,21 @@ public class Dynamic implements Hamiltonian{
                 returnList.add(i);
         return returnList;
     }
-
-    private double[] getMin(ArrayList<double[]> arrays){
-        double[] returnList = new double[arrays.get(0).length];
-        double min;
-        for(int i = 0; i < returnList.length; i++){
-            min = Double.MAX_VALUE;
-            for(double[] array : arrays)
-                if(array[i] < min)
-                    min = array[i];
-            returnList[i] = min;
+    private String removeHead(String s){
+        String returnString = "";
+        boolean head = true;
+        for(int i = 0; i < s.length(); i++){
+            if(head && s.charAt(i) == '1')
+                head = false;
+            if(!head)
+                returnString += s.charAt(i);
         }
-
-        return returnList;
+        return returnString;
     }
 
     @Override
     public double getWeight() {
-        return 0;
+        return this.weight;
     }
 
     @Override
